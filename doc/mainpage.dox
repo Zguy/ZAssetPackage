@@ -1,0 +1,8 @@
+/*!
+	\mainpage Documentation
+	\section intro_sec Introduction
+		A library and archive format specialized for storing game assets to be loaded and unloaded at runtime, with support for compression.
+		
+	\section getstarted_sec Getting started
+		Run CMake and build.
+*/

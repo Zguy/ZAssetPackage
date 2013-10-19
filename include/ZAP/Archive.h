@@ -87,6 +87,11 @@ namespace ZAP
 		Version getVersion() const;
 
 		/**
+		 * \brief	Returns whether this build of the library supports the compression method used by this archive.
+		 */
+		bool isSupportedCompression() const;
+
+		/**
 		 * \brief	Checks if the archive contains a file.
 		 *
 		 * \param	virtual_path	Full pathname of the virtual file.

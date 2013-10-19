@@ -29,6 +29,18 @@ THE SOFTWARE.*/
 
 namespace ZAP
 {
+	bool supportsCompression(Compression compression)
+	{
+		switch (compression)
+		{
+		case COMPRESS_NONE: return true;
+#ifdef ZAP_COMPRESS_LZ4
+		case COMPRESS_LZ4: return true;
+#endif
+		default: return false;
+		}
+	}
+
 	bool compress(Compression compression, char *&data, std::uint32_t in_size, std::uint32_t &out_size)
 	{
 		if (data == nullptr)

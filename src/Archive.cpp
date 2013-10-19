@@ -72,6 +72,11 @@ namespace ZAP
 		return static_cast<Version>(header.version);
 	}
 
+	bool Archive::isSupportedCompression() const
+	{
+		return supportsCompression(getCompression());
+	}
+
 	bool Archive::hasFile(const std::string &virtual_path) const
 	{
 		return (lookupTable.find(virtual_path) != lookupTable.cend());
@@ -79,7 +84,7 @@ namespace ZAP
 
 	DataPointer Archive::getData(const std::string &virtual_path) const
 	{
-		if (!isOpen())
+		if (!isOpen() || !isSupportedCompression())
 		{
 			return DataPointer();
 		}

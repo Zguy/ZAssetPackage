@@ -86,7 +86,7 @@ namespace ZAP
 			return false;
 		}
 
-		if (compression < COMPRESS_NONE || compression >= COMPRESS_LAST)
+		if (compression < COMPRESS_NONE || compression >= COMPRESS_LAST || !supportsCompression(compression))
 		{
 			return false;
 		}

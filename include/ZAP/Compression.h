@@ -40,6 +40,13 @@ namespace ZAP
 	};
 
 	/**
+	 * \brief	Returns whether this build of the library supports a given compression method.
+	 *
+	 * \param	compression	The compression method.
+	 */
+	bool supportsCompression(Compression compression);
+
+	/**
 	 * \brief	Compress data.
 	 *
 	 * \param	compression					The compression method.

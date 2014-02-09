@@ -52,6 +52,10 @@ set (CMAKE_RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/lib")
 
 add_library (ZAP STATIC ${SRC})
 
+if (CMAKE_COMPILER_IS_GNUCXX)
+	set_target_properties (ZAP PROPERTIES COMPILE_FLAGS "-std=c++11 -Wno-multichar")
+endif ()
+
 if (ZAP_BUILD_DOC)
 	add_subdirectory (doc)
 endif ()

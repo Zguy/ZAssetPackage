@@ -7,6 +7,8 @@ set (VERSION_MAJOR 0)
 set (VERSION_MINOR 1)
 set (VERSION_PATCH 0)
 
+set (CMAKE_DEBUG_POSTFIX d)
+
 #option (BUILD_SHARED_LIBS "Build shared libs" OFF)
 option (ZAP_BUILD_DOC "Generate documentation" OFF)
 

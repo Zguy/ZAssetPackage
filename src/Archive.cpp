@@ -22,6 +22,7 @@ THE SOFTWARE.*/
 #include <ZAP/Archive.h>
 
 #include <fstream>
+#include <sstream>
 
 namespace
 {
@@ -31,36 +32,47 @@ namespace
 
 namespace ZAP
 {
-	Archive::Archive()
+	Archive::Archive() : stream(nullptr)
 	{
 	}
-	Archive::Archive(const std::string &filename)
+	Archive::Archive(const std::string &filename) : stream(nullptr)
 	{
-		open(filename);
+		openFile(filename);
+	}
+	Archive::Archive(const char *data, std::size_t size) : stream(nullptr)
+	{
+		openMemory(data, size);
 	}
 	Archive::~Archive()
 	{
 		close();
 	}
 
-	bool Archive::open(const std::string &filename)
+	bool Archive::openFile(const std::string &filename)
 	{
-		stream.open(filename, std::ios::in | std::ios::binary);
-		if (!stream.is_open())
+		std::ifstream *file = new std::ifstream(filename, std::ios::in | std::ios::binary);
+		if (!file->is_open())
 		{
 			return false;
 		}
+		stream = file;
+		return loadStream();
+	}
+	bool Archive::openMemory(const char *data, std::size_t size)
+	{
+		stream = new std::istringstream(std::string(data, size), std::ios::in | std::ios::binary);
 		return loadStream();
 	}
 	void Archive::close()
 	{
-		stream.close();
+		delete stream;
+		stream = nullptr;
 		header = ArchiveHeader();
 		lookupTable.clear();
 	}
 	bool Archive::isOpen() const
 	{
-		return stream.is_open();
+		return (stream != nullptr);
 	}
 
 	Compression Archive::getCompression() const
@@ -102,11 +114,11 @@ namespace ZAP
 			return DataPointer();
 		}
 
-		stream.seekg(entry.index);
+		stream->seekg(entry.index);
 
 		std::uint32_t size = entry.decompressed_size;
 		char *data = new char[entry.compressed_size];
-		stream.read(data, entry.compressed_size);
+		stream->read(data, entry.compressed_size);
 
 		Compression compression = static_cast<Compression>(header.compression);
 		if (!decompress(compression, data, entry.compressed_size, size))
@@ -184,10 +196,10 @@ namespace ZAP
 	bool Archive::parseHeader()
 	{
 		// We assume that stream is open
-		stream.seekg(MAGIC_POS);
-		stream.read(reinterpret_cast<char*>(&header.magic), sizeof(std::uint16_t));
-		stream.read(reinterpret_cast<char*>(&header.version), sizeof(std::uint8_t));
-		stream.read(reinterpret_cast<char*>(&header.compression), sizeof(std::uint8_t));
+		stream->seekg(MAGIC_POS);
+		stream->read(reinterpret_cast<char*>(&header.magic), sizeof(std::uint16_t));
+		stream->read(reinterpret_cast<char*>(&header.version), sizeof(std::uint8_t));
+		stream->read(reinterpret_cast<char*>(&header.compression), sizeof(std::uint8_t));
 
 		if (header.magic != 'AZ')
 			return false;
@@ -201,11 +213,11 @@ namespace ZAP
 	void Archive::buildLookupTable()
 	{
 		// We assume that stream is open
-		stream.seekg(TABLE_POS);
+		stream->seekg(TABLE_POS);
 		lookupTable.clear();
 
 		std::uint32_t tableSize = 0;
-		stream.read(reinterpret_cast<char*>(&tableSize), sizeof(uint32_t));
+		stream->read(reinterpret_cast<char*>(&tableSize), sizeof(uint32_t));
 
 		for (uint32_t i = 0; i < tableSize; ++i)
 		{
@@ -214,7 +226,7 @@ namespace ZAP
 			char c = '\0';
 			for(;;)
 			{
-				stream.read(&c, 1);
+				stream->read(&c, 1);
 
 				if (c == '\0')
 					break;
@@ -223,9 +235,9 @@ namespace ZAP
 			}
 
 			ArchiveEntry entry;
-			stream.read(reinterpret_cast<char*>(&entry.index), sizeof(uint32_t));
-			stream.read(reinterpret_cast<char*>(&entry.decompressed_size), sizeof(uint32_t));
-			stream.read(reinterpret_cast<char*>(&entry.compressed_size), sizeof(uint32_t));
+			stream->read(reinterpret_cast<char*>(&entry.index), sizeof(uint32_t));
+			stream->read(reinterpret_cast<char*>(&entry.decompressed_size), sizeof(uint32_t));
+			stream->read(reinterpret_cast<char*>(&entry.compressed_size), sizeof(uint32_t));
 
 			lookupTable.insert(std::make_pair(filename, entry));
 		}

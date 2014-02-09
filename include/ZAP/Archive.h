@@ -27,7 +27,7 @@ THE SOFTWARE.*/
 #include <ZAP/Version.h>
 
 #include <cstdint>
-#include <fstream>
+#include <istream>
 #include <map>
 #include <string>
 #include <vector>
@@ -46,11 +46,19 @@ namespace ZAP
 		Archive();
 
 		/**
-		 * \brief	Constructor that calls open().
+		 * \brief	Constructor that calls openFile().
 		 *
 		 * \param	filename	Filename of the archive.
 		 */
 		Archive(const std::string &filename);
+
+		/**
+		 * \brief Constructor that calls openMemory().
+		 *
+		 * \param data A pointer to the data.
+		 * \param size Size of the data.
+		 */
+		Archive(const char *data, std::size_t size);
 
 		~Archive();
 
@@ -61,11 +69,21 @@ namespace ZAP
 		 *
 		 * \return	true if it succeeds, false if the file can't be opened.
 		 */
-		bool open(const std::string &filename);
+		bool openFile(const std::string &filename);
+
+		/**
+		 * \brief Opens an archive from memory.
+		 *
+		 * \param data A pointer to the data.
+		 * \param size Size of the data.
+		 *
+		 * \return true if it succeeds, false if it fails.
+		 */
+		bool openMemory(const char *data, std::size_t size);
 
 		/**
 		 * \brief	Closes the archive.
-		 * 
+		 *
 		 * It's not important to call this because
 		 * it's called by the destructor.
 		 */
@@ -153,7 +171,7 @@ namespace ZAP
 		bool parseHeader();
 		void buildLookupTable();
 
-		mutable std::ifstream stream;
+		std::istream *stream;
 
 		ArchiveHeader header;
 		EntryMap lookupTable;

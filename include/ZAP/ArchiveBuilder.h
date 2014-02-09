@@ -86,17 +86,31 @@ namespace ZAP
 		void getFileMap(std::map<std::string,std::string> &map);
 
 		/**
-		 * \brief	Builds the archive.
+		 * \brief	Builds the archive to a file.
 		 * \note If a file cannot be found, a zero-length file will be stored.
 		 *
-		 * \param	filename	 	Filename to save the archive to.
+		 * \param	filename	Filename to save the archive to.
 		 * \param	compression	(optional) The compression method to use, defaults to none.
 		 *
 		 * \return	true if it succeeds, false if it fails.
 		 */
-		bool build(const std::string &filename, Compression compression = COMPRESS_NONE);
+		bool buildFile(const std::string &filename, Compression compression = COMPRESS_NONE);
+
+		/**
+		 * \brief Builds the archive to memory.
+		 * \note If a file cannot be found, a zero-length file will be stored.
+		 *
+		 * \param [out] data	The resulting data, untouched if failed.
+		 * \param [out] size	The resulting size, untouched if failed.
+		 * \param compression	(optional) The compression method to use, defaults to none.
+		 *
+		 * \return true if it succeeds, false if it fails.
+		 */
+		bool buildMemory(char *&data, std::size_t &size, Compression compression = COMPRESS_NONE);
 
 	private:
+		bool build(std::ostream &stream, Compression compression);
+
 		struct Entry
 		{
 			bool operator<(const Entry &rhs) const

@@ -24,6 +24,7 @@ THE SOFTWARE.*/
 
 #include <cstdint>
 #include <fstream>
+#include <sstream>
 
 namespace ZAP
 {
@@ -78,14 +79,34 @@ namespace ZAP
 		}
 	}
 
-	bool ArchiveBuilder::build(const std::string &filename, Compression compression)
+	bool ArchiveBuilder::buildFile(const std::string &filename, Compression compression)
 	{
 		std::ofstream stream(filename, std::ios::out | std::ios::trunc | std::ios::binary);
 		if (!stream.is_open())
 		{
 			return false;
 		}
+		return build(stream, compression);
+	}
+	bool ArchiveBuilder::buildMemory(char *&data, std::size_t &size, Compression compression)
+	{
+		std::stringstream stream(std::ios::binary);
+		if (build(stream, compression))
+		{
+			stream.seekg(0, std::ios::end);
+			size = static_cast<std::size_t>(stream.tellg());
+			stream.seekg(0, std::ios::beg);
 
+			data = new char[size];
+			stream.read(data, size);
+
+			return true;
+		}
+		return false;
+	}
+
+	bool ArchiveBuilder::build(std::ostream &stream, Compression compression)
+	{
 		if (compression < COMPRESS_NONE || compression >= COMPRESS_LAST || !supportsCompression(compression))
 		{
 			return false;

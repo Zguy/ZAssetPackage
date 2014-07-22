@@ -46,11 +46,7 @@ namespace ZAP
 
 	bool ArchiveBuilder::addFile(const std::string &real_path, const std::string &virtual_path)
 	{
-		Entry entry;
-		entry.real_path    = real_path;
-		entry.virtual_path = virtual_path;
-
-		return files.insert(entry).second;
+		return files.emplace(real_path, virtual_path).second;
 	}
 
 	bool ArchiveBuilder::removeFile(const std::string &virtual_path)

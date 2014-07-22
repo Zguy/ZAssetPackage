@@ -113,6 +113,7 @@ namespace ZAP
 
 		struct Entry
 		{
+			Entry(const std::string &real_path, const std::string &virtual_path) : real_path(real_path), virtual_path(virtual_path) {}
 			bool operator<(const Entry &rhs) const
 			{
 				return (virtual_path < rhs.virtual_path);

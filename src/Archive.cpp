@@ -245,7 +245,7 @@ namespace ZAP
 			readField(stream, &entry.decompressed_size);
 			readField(stream, &entry.compressed_size);
 
-			lookupTable.insert(std::make_pair(filename, entry));
+			lookupTable.emplace(filename, entry);
 		}
 	}
 }

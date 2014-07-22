@@ -84,7 +84,7 @@ namespace ZAP
 		for (FileList::const_iterator it = files.cbegin(); it != files.cend(); ++it)
 		{
 			const Entry &entry = (*it);
-			map.insert(std::make_pair(entry.virtual_path, entry.real_path));
+			map.emplace(entry.virtual_path, entry.real_path);
 		}
 	}
 

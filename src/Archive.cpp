@@ -26,8 +26,8 @@ THE SOFTWARE.*/
 
 namespace
 {
-	static const std::istream::pos_type MAGIC_POS = 0;
-	static const std::istream::pos_type TABLE_POS = 4;
+	const std::istream::pos_type MAGIC_POS = 0;
+	const std::istream::pos_type TABLE_POS = 4;
 
 	template<typename T>
 	inline void readField(std::istream *stream, T *field)

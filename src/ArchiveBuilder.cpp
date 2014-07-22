@@ -79,8 +79,6 @@ namespace ZAP
 
 	void ArchiveBuilder::getFileMap(std::map<std::string,std::string> &map)
 	{
-		map.clear();
-
 		for (FileList::const_iterator it = files.cbegin(); it != files.cend(); ++it)
 		{
 			const Entry &entry = (*it);

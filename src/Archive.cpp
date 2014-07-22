@@ -28,6 +28,12 @@ namespace
 {
 	static const std::istream::pos_type MAGIC_POS = 0;
 	static const std::istream::pos_type TABLE_POS = 4;
+
+	template<typename T>
+	inline void readField(std::istream *stream, T *field)
+	{
+		stream->read(reinterpret_cast<char*>(field), sizeof(T));
+	}
 }
 
 namespace ZAP
@@ -197,9 +203,9 @@ namespace ZAP
 	{
 		// We assume that stream is open
 		stream->seekg(MAGIC_POS);
-		stream->read(reinterpret_cast<char*>(&header.magic), sizeof(std::uint16_t));
-		stream->read(reinterpret_cast<char*>(&header.version), sizeof(std::uint8_t));
-		stream->read(reinterpret_cast<char*>(&header.compression), sizeof(std::uint8_t));
+		readField(stream, &header.magic);
+		readField(stream, &header.version);
+		readField(stream, &header.compression);
 
 		if (header.magic != 'AZ')
 			return false;
@@ -217,7 +223,7 @@ namespace ZAP
 		lookupTable.clear();
 
 		std::uint32_t tableSize = 0;
-		stream->read(reinterpret_cast<char*>(&tableSize), sizeof(uint32_t));
+		readField(stream, &tableSize);
 
 		for (uint32_t i = 0; i < tableSize; ++i)
 		{
@@ -235,9 +241,9 @@ namespace ZAP
 			}
 
 			ArchiveEntry entry;
-			stream->read(reinterpret_cast<char*>(&entry.index), sizeof(uint32_t));
-			stream->read(reinterpret_cast<char*>(&entry.decompressed_size), sizeof(uint32_t));
-			stream->read(reinterpret_cast<char*>(&entry.compressed_size), sizeof(uint32_t));
+			readField(stream, &entry.index);
+			readField(stream, &entry.decompressed_size);
+			readField(stream, &entry.compressed_size);
 
 			lookupTable.insert(std::make_pair(filename, entry));
 		}

@@ -26,6 +26,15 @@ THE SOFTWARE.*/
 #include <fstream>
 #include <sstream>
 
+namespace
+{
+	template<typename T>
+	inline void writeField(std::ostream &stream, T *field)
+	{
+		stream.write(reinterpret_cast<const char*>(field), sizeof(T));
+	}
+}
+
 namespace ZAP
 {
 	ArchiveBuilder::ArchiveBuilder()
@@ -117,13 +126,13 @@ namespace ZAP
 		const std::uint8_t COMPRESSION = static_cast<std::uint8_t>(compression);
 
 		// Header
-		stream.write(reinterpret_cast<const char*>(&MAGIC), sizeof(std::uint16_t)); // Magic
-		stream.write(reinterpret_cast<const char*>(&VERSION), sizeof(std::uint8_t)); // Version
-		stream.write(reinterpret_cast<const char*>(&COMPRESSION), sizeof(std::uint8_t)); // Compression
+		writeField(stream, &MAGIC); // Magic
+		writeField(stream, &VERSION); // Version
+		writeField(stream, &COMPRESSION); // Compression
 
 		// Build lookup table
 		std::uint32_t tableSize = files.size();
-		stream.write(reinterpret_cast<const char*>(&tableSize), sizeof(std::uint32_t)); // Table size
+		writeField(stream, &tableSize); // Table size
 
 		std::uint32_t *fillIn = new std::uint32_t[tableSize];
 		std::uint32_t *currFillIn = &fillIn[0];
@@ -136,9 +145,9 @@ namespace ZAP
 			// We don't know these values yet
 			(*currFillIn) = static_cast<std::uint32_t>(stream.tellp());
 			static const std::uint32_t ZERO = 0;
-			stream.write(reinterpret_cast<const char*>(&ZERO), sizeof(std::uint32_t)); // File index
-			stream.write(reinterpret_cast<const char*>(&ZERO), sizeof(std::uint32_t)); // Original file size
-			stream.write(reinterpret_cast<const char*>(&ZERO), sizeof(std::uint32_t)); // Archive file size
+			writeField(stream, &ZERO); // File index
+			writeField(stream, &ZERO); // Original file size
+			writeField(stream, &ZERO); // Archive file size
 
 			++currFillIn;
 		}
@@ -184,9 +193,9 @@ namespace ZAP
 			std::uint32_t pos = (*currFillIn);
 			stream.seekp(pos);
 
-			stream.write(reinterpret_cast<const char*>(&index), sizeof(std::uint32_t));
-			stream.write(reinterpret_cast<const char*>(&original_filesize), sizeof(std::uint32_t));
-			stream.write(reinterpret_cast<const char*>(&archive_filesize), sizeof(std::uint32_t));
+			writeField(stream, &index);
+			writeField(stream, &original_filesize);
+			writeField(stream, &archive_filesize);
 
 			stream.seekp(bpos);
 

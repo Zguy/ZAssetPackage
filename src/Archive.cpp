@@ -177,9 +177,8 @@ namespace ZAP
 
 	void Archive::getFileList(std::vector<std::string> &list)
 	{
-		for (EntryMap::const_iterator it = lookupTable.cbegin(); it != lookupTable.cend(); ++it)
+		for (EntryMap::const_reference entry : lookupTable)
 		{
-			EntryMap::const_reference entry = (*it);
 			list.push_back(entry.first);
 		}
 	}

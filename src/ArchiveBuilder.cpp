@@ -75,9 +75,8 @@ namespace ZAP
 
 	void ArchiveBuilder::getFileMap(std::map<std::string,std::string> &map)
 	{
-		for (FileList::const_iterator it = files.cbegin(); it != files.cend(); ++it)
+		for (const Entry &entry : files)
 		{
-			const Entry &entry = (*it);
 			map.emplace(entry.virtual_path, entry.real_path);
 		}
 	}
@@ -130,10 +129,8 @@ namespace ZAP
 
 		std::uint32_t *fillIn = new std::uint32_t[tableSize];
 		std::uint32_t *currFillIn = &fillIn[0];
-		for (FileList::const_iterator it = files.cbegin(); it != files.cend(); ++it)
+		for (const Entry &entry : files)
 		{
-			const Entry &entry = (*it);
-
 			stream.write(entry.virtual_path.c_str(), sizeof(char)*entry.virtual_path.size()+1);
 
 			// We don't know these values yet
@@ -148,10 +145,8 @@ namespace ZAP
 		currFillIn = &fillIn[0];
 
 		// Build data block
-		for (FileList::const_iterator it = files.cbegin(); it != files.cend(); ++it)
+		for (const Entry &entry : files)
 		{
-			const Entry &entry = (*it);
-
 			std::uint32_t index = static_cast<std::uint32_t>(stream.tellp());
 			std::uint32_t original_filesize = 0;
 			std::uint32_t archive_filesize = 0;

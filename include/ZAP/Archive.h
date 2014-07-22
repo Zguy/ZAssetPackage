@@ -167,6 +167,8 @@ namespace ZAP
 		};
 		typedef std::map<std::string, ArchiveEntry> EntryMap;
 
+		const ArchiveEntry *getEntry(const std::string &virtual_path) const;
+
 		bool loadStream();
 		bool parseHeader();
 		void buildLookupTable();

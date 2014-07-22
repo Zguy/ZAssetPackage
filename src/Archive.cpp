@@ -102,32 +102,20 @@ namespace ZAP
 
 	DataPointer Archive::getData(const std::string &virtual_path) const
 	{
-		if (!isOpen() || !isSupportedCompression())
-		{
+		const ArchiveEntry *entry = getEntry(virtual_path);
+		if (entry == nullptr || !isSupportedCompression())
 			return DataPointer();
-		}
 
-		EntryMap::const_iterator it = lookupTable.find(virtual_path);
-		if (it == lookupTable.cend())
-		{
+		if (entry->compressed_size == 0 || entry->decompressed_size == 0)
 			return DataPointer();
-		}
 
-		const ArchiveEntry &entry = (*it).second;
+		stream->seekg(entry->index);
 
-		if (entry.compressed_size == 0 || entry.decompressed_size == 0)
-		{
-			return DataPointer();
-		}
+		std::uint32_t size = entry->decompressed_size;
+		char *data = new char[entry->compressed_size];
+		stream->read(data, entry->compressed_size);
 
-		stream->seekg(entry.index);
-
-		std::uint32_t size = entry.decompressed_size;
-		char *data = new char[entry.compressed_size];
-		stream->read(data, entry.compressed_size);
-
-		Compression compression = static_cast<Compression>(header.compression);
-		if (!decompress(compression, data, entry.compressed_size, size))
+		if (!decompress(getCompression(), data, entry->compressed_size, size))
 		{
 			delete[] data;
 			data = nullptr;
@@ -139,35 +127,19 @@ namespace ZAP
 
 	std::uint32_t Archive::getDecompressedSize(const std::string &virtual_path) const
 	{
-		if (!isOpen())
-		{
+		const ArchiveEntry *entry = getEntry(virtual_path);
+		if (entry == nullptr)
 			return 0;
-		}
 
-		EntryMap::const_iterator it = lookupTable.find(virtual_path);
-		if (it == lookupTable.cend())
-		{
-			return 0;
-		}
-
-		const ArchiveEntry &entry = (*it).second;
-		return entry.decompressed_size;
+		return entry->decompressed_size;
 	}
 	std::uint32_t Archive::getCompressedSize(const std::string &virtual_path) const
 	{
-		if (!isOpen())
-		{
+		const ArchiveEntry *entry = getEntry(virtual_path);
+		if (entry == nullptr)
 			return 0;
-		}
 
-		EntryMap::const_iterator it = lookupTable.find(virtual_path);
-		if (it == lookupTable.cend())
-		{
-			return 0;
-		}
-
-		const ArchiveEntry &entry = (*it).second;
-		return entry.compressed_size;
+		return entry->compressed_size;
 	}
 
 	std::size_t Archive::getFileCount() const
@@ -181,6 +153,18 @@ namespace ZAP
 		{
 			list.push_back(entry.first);
 		}
+	}
+
+	const Archive::ArchiveEntry *Archive::getEntry(const std::string &virtual_path) const
+	{
+		if (!isOpen())
+			return nullptr;
+
+		EntryMap::const_iterator it = lookupTable.find(virtual_path);
+		if (it == lookupTable.cend())
+			return nullptr;
+
+		return &(*it).second;
 	}
 
 	bool Archive::loadStream()

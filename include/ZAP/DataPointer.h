@@ -34,7 +34,7 @@ namespace ZAP
 	public:
 		/**
 		 * \brief	Default constructor.
-		 * 
+		 *
 		 * This constructs a null DataPointer.
 		 */
 		DataPointer() : data(nullptr), size(0)
@@ -51,11 +51,6 @@ namespace ZAP
 		{
 		}
 
-		/**
-		 * \brief	Copy constructor.
-		 *
-		 * \param	other	The other.
-		 */
 		DataPointer(const DataPointer &other) : data(other.data), size(other.size)
 		{
 		}

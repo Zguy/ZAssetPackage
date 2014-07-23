@@ -23,7 +23,6 @@ THE SOFTWARE.*/
 #define ZAP_Archive_h__
 
 #include <ZAP/Compression.h>
-#include <ZAP/DataPointer.h>
 #include <ZAP/Version.h>
 
 #include <cstdint>
@@ -120,10 +119,12 @@ namespace ZAP
 		 * \brief	Returns the data for a file.
 		 *
 		 * \param	virtual_path	Full pathname of the virtual file.
+		 * \param [out] data The data, untouched if failed.
+		 * \param [out] size The data size, untouched if failed.
 		 *
-		 * \return	A DataPointer instance containing the file, or a null DataPointer instance if it fails.
+		 * \return	false if the virtual_path does not exist, or uses an unsupported compression.
 		 */
-		DataPointer getData(const std::string &virtual_path) const;
+		bool getData(const std::string &virtual_path, char *&data, size_t &size) const;
 
 		/**
 		 * \brief	Returns the decompressed size of a file.

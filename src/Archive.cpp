@@ -100,14 +100,14 @@ namespace ZAP
 		return (lookupTable.find(virtual_path) != lookupTable.cend());
 	}
 
-	DataPointer Archive::getData(const std::string &virtual_path) const
+	bool Archive::getData(const std::string &virtual_path, char *&return_data, size_t &return_size) const
 	{
 		const ArchiveEntry *entry = getEntry(virtual_path);
 		if (entry == nullptr || !isSupportedCompression())
-			return DataPointer();
+			return false;
 
 		if (entry->compressed_size == 0 || entry->decompressed_size == 0)
-			return DataPointer();
+			return false;
 
 		stream->seekg(entry->index);
 
@@ -118,11 +118,12 @@ namespace ZAP
 		if (!decompress(getCompression(), data, entry->compressed_size, size))
 		{
 			delete[] data;
-			data = nullptr;
-			size = 0;
+			return false;
 		}
 
-		return DataPointer(data, size);
+		return_data = data;
+		return_size = size;
+		return true;
 	}
 
 	std::uint32_t Archive::getDecompressedSize(const std::string &virtual_path) const

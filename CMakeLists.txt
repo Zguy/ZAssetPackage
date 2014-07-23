@@ -32,7 +32,6 @@ set (SRC
 	"${INCROOT}/ArchiveBuilder.h"
 	"${SRCROOT}/Compression.cpp"
 	"${INCROOT}/Compression.h"
-	"${INCROOT}/DataPointer.h"
 	"${INCROOT}/Version.h"
 )
 source_group ("zap" FILES ${SRC})

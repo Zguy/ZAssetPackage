@@ -33,123 +33,76 @@ THE SOFTWARE.*/
 
 namespace ZAP
 {
-	/**
-	 * \brief	Used to load an archive.
-	 */
+	///\brief Used to load an archive.
 	class Archive
 	{
 	public:
-		/**
-		 * \brief	Default constructor.
-		 */
+		///\brief Default constructor.
 		Archive();
 
-		/**
-		 * \brief	Constructor that calls openFile().
-		 *
-		 * \param	filename	Filename of the archive.
-		 */
+		///\brief Constructor that calls openFile().
+		///\param filename Filename of the archive.
 		Archive(const std::string &filename);
 
-		/**
-		 * \brief Constructor that calls openMemory().
-		 *
-		 * \param data A pointer to the data.
-		 * \param size Size of the data.
-		 */
+		///\brief Constructor that calls openMemory().
+		///\param data A pointer to the data.
+		///\param size Size of the data.
 		Archive(const char *data, std::size_t size);
 
 		~Archive();
 
-		/**
-		 * \brief	Opens an archive from file.
-		 *
-		 * \param	filename	Filename of the archive.
-		 *
-		 * \return	true if it succeeds, false if the file can't be opened.
-		 */
+		///\brief Opens an archive from file.
+		///\param filename Filename of the archive.
+		///\return false if the file can't be opened.
 		bool openFile(const std::string &filename);
 
-		/**
-		 * \brief Opens an archive from memory.
-		 *
-		 * \param data A pointer to the data.
-		 * \param size Size of the data.
-		 *
-		 * \return true if it succeeds, false if it fails.
-		 */
+		///\brief Opens an archive from memory.
+		///\param data A pointer to the data.
+		///\param size Size of the data.
+		///\return false if it fails.
 		bool openMemory(const char *data, std::size_t size);
 
-		/**
-		 * \brief	Closes the archive.
-		 *
-		 * It's not important to call this because
-		 * it's called by the destructor.
-		 */
+		///\brief Closes the archive.
+		///
+		/// It's not important to call this because it's called by the destructor.
 		void close();
 
-		/**
-		 * \brief	Checks if this archive is opened.
-		 */
+		///\brief Checks if this archive is opened.
 		bool isOpen() const;
 
-		/**
-		 * \brief	Returns the compression method this archive uses.
-		 */
+		///\brief Returns the compression method this archive uses.
 		Compression getCompression() const;
 
-		/**
-		 * \brief	Returns the archive format version this archive is saved with.
-		 */
+		///\brief Returns the archive format version this archive is saved with.
 		Version getVersion() const;
 
-		/**
-		 * \brief	Returns whether this build of the library supports the compression method used by this archive.
-		 */
+		///\brief Returns whether this build of the library supports the compression method used by this archive.
 		bool isSupportedCompression() const;
 
-		/**
-		 * \brief	Checks if the archive contains a file.
-		 *
-		 * \param	virtual_path	Full pathname of the virtual file.
-		 */
+		///\brief Checks if the archive contains a file.
+		///\param virtual_path Full pathname of the virtual file.
 		bool hasFile(const std::string &virtual_path) const;
 
-		/**
-		 * \brief	Returns the data for a file.
-		 *
-		 * \param	virtual_path	Full pathname of the virtual file.
-		 * \param [out] data The data, untouched if failed.
-		 * \param [out] size The data size, untouched if failed.
-		 *
-		 * \return	false if the virtual_path does not exist, or uses an unsupported compression.
-		 */
+		///\brief Returns the data for a file.
+		///\param virtual_path Full pathname of the virtual file.
+		///\param [out] data The data, untouched if failed.
+		///\param [out] size The data size, untouched if failed.
+		///\return false if the virtual_path does not exist, or uses an unsupported compression.
 		bool getData(const std::string &virtual_path, char *&data, size_t &size) const;
 
-		/**
-		 * \brief	Returns the decompressed size of a file.
-		 *
-		 * \param	virtual_path	Full pathname of the virtual file.
-		 */
+		///\brief Returns the decompressed size of a file.
+		///\param virtual_path Full pathname of the virtual file.
 		std::uint32_t getDecompressedSize(const std::string &virtual_path) const;
 
-		/**
-		 * \brief	Returns the compressed size of a file.
-		 *
-		 * \param	virtual_path	Full pathname of the virtual file.
-		 */
+		///\brief Returns the compressed size of a file.
+		///\param virtual_path Full pathname of the virtual file.
 		std::uint32_t getCompressedSize(const std::string &virtual_path) const;
 
-		/**
-		 * \brief	Returns the number of files in the archive.
-		 */
+		///\brief Returns the number of files in the archive.
 		std::size_t getFileCount() const;
 
-		/**
-		 * \brief	Gets the list of files in the archive.
-		 *
-		 * \param [out]	list	The list.
-		 */
+		///\brief Gets the list of files in the archive.
+		///\param [out] list The list.
 		void getFileList(std::vector<std::string> &list);
 
 	private:

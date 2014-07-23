@@ -24,14 +24,10 @@ THE SOFTWARE.*/
 
 #include <cstdint>
 
-/**
- * \brief ZAssetPackage.
- */
+///\brief ZAssetPackage.
 namespace ZAP
 {
-	/**
-	 * \brief	The supported compression methods.
-	 */
+	///\brief The supported compression methods.
 	enum Compression
 	{
 		COMPRESS_NONE = 0, ///< No compression.
@@ -39,35 +35,24 @@ namespace ZAP
 		COMPRESS_LAST
 	};
 
-	/**
-	 * \brief	Returns whether this build of the library supports a given compression method.
-	 *
-	 * \param	compression	The compression method.
-	 */
+	///\brief Returns whether this build of the library supports a given compression method.
+	///\param compression The compression method.
 	bool supportsCompression(Compression compression);
 
-	/**
-	 * \brief	Compress data.
-	 *
-	 * \param	compression					The compression method.
-	 * \param [in,out]	data			The data to compress. This will be delete[]d and replaced with the compressed data.
-	 * \param	in_size							Size of the decompressed data.
-	 * \param [out]	out_size			Size of the compressed data.
-	 *
-	 * \return	true if it succeeds, false if it fails.
-	 */
+	///\brief Compress data.
+	///\param compression    The compression method.
+	///\param [in,out] data  The data to compress. This will be delete[]d and replaced with the compressed data.
+	///\param in_size        Size of the decompressed data.
+	///\param [out] out_size Size of the compressed data.
+	///\return true if it succeeds, false if it fails.
 	bool compress(Compression compression, char *&data, std::uint32_t in_size, std::uint32_t &out_size);
 
-	/**
-	 * \brief	Decompress data.
-	 *
-	 * \param	compression			The compression method.
-	 * \param [in,out]	data	The data to decompress. This will be delete[]d and replaced with the decompressed data.
-	 * \param	in_size					Size of the compressed data.
-	 * \param	out_size				Size of the decompressed data.
-	 *
-	 * \return	true if it succeeds, false if it fails.
-	 */
+	///\brief Decompress data.
+	///\param compression   The compression method.
+	///\param [in,out] data The data to decompress. This will be delete[]d and replaced with the decompressed data.
+	///\param in_size       Size of the compressed data.
+	///\param out_size      Size of the decompressed data.
+	///\return true if it succeeds, false if it fails.
 	bool decompress(Compression compression, char *&data, std::uint32_t in_size, std::uint32_t out_size);
 }
 

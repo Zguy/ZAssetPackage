@@ -24,9 +24,7 @@ THE SOFTWARE.*/
 
 namespace ZAP
 {
-	/**
-	 * \brief	Versions of the archive format.
-	 */
+	///\brief Versions of the archive format.
 	enum Version
 	{
 		VERSION_1_0 = 0, ///< Version 1.0.

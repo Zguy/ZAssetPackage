@@ -27,7 +27,7 @@ THE SOFTWARE.*/
 
 #include <cstdint>
 #include <istream>
-#include <map>
+#include <unordered_map>
 #include <string>
 #include <vector>
 
@@ -119,7 +119,7 @@ namespace ZAP
 			std::uint32_t decompressed_size;
 			std::uint32_t compressed_size;
 		};
-		typedef std::map<std::string, ArchiveEntry> EntryMap;
+		typedef std::unordered_map<std::string, ArchiveEntry> EntryMap;
 
 		const ArchiveEntry *getEntry(const std::string &virtual_path) const;
 

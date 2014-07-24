@@ -49,14 +49,14 @@ endif ()
 
 set (CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/lib")
 set (CMAKE_LIBRARY_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/lib")
-set (CMAKE_RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/lib")
+set (CMAKE_RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/bin")
 
 add_library (ZAP STATIC ${SRC})
 
 if (CMAKE_COMPILER_IS_GNUCXX)
-	set_target_properties (ZAP PROPERTIES COMPILE_FLAGS "-std=c++11 -Wno-multichar")
+	set_source_files_properties (${SRC} PROPERTIES COMPILE_FLAGS "-std=c++11 -Wno-multichar")
 endif ()
 
 if (ZAP_BUILD_DOC)
-	add_subdirectory (doc)
+	add_subdirectory ("doc")
 endif ()

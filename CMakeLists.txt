@@ -11,6 +11,7 @@ set (CMAKE_DEBUG_POSTFIX d)
 
 #option (BUILD_SHARED_LIBS "Build shared libs" OFF)
 option (ZAP_BUILD_DOC "Generate documentation" OFF)
+option (ZAP_BUILD_CLI_TOOL "Build CLI tool" ON)
 
 # Compression support
 option (ZAP_COMPRESS_LZ4 "LZ4 compression support" ON)
@@ -59,4 +60,8 @@ endif ()
 
 if (ZAP_BUILD_DOC)
 	add_subdirectory ("doc")
+endif ()
+
+if (ZAP_BUILD_CLI_TOOL)
+	add_subdirectory ("cli")
 endif ()

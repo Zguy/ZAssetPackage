@@ -148,7 +148,7 @@ namespace ZAP
 		return lookupTable.size();
 	}
 
-	void Archive::getFileList(std::vector<std::string> &list)
+	void Archive::getFileList(std::vector<std::string> &list) const
 	{
 		for (EntryMap::const_reference entry : lookupTable)
 		{

@@ -73,7 +73,7 @@ namespace ZAP
 		return files.size();
 	}
 
-	void ArchiveBuilder::getFileMap(std::map<std::string,std::string> &map)
+	void ArchiveBuilder::getFileMap(std::map<std::string,std::string> &map) const
 	{
 		for (const Entry &entry : files)
 		{

@@ -63,7 +63,7 @@ namespace ZAP
 		///
 		/// The key is the virtual path and the value is the real path.
 		///\param [out] map The map.
-		void getFileMap(std::map<std::string,std::string> &map);
+		void getFileMap(std::map<std::string,std::string> &map) const;
 
 		///\brief Builds the archive to a file.
 		///\note If a file cannot be found, a zero-length file will be stored.

@@ -103,7 +103,7 @@ namespace ZAP
 
 		///\brief Gets the list of files in the archive.
 		///\param [out] list The list.
-		void getFileList(std::vector<std::string> &list);
+		void getFileList(std::vector<std::string> &list) const;
 
 	private:
 		struct ArchiveHeader

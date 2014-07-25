@@ -26,7 +26,7 @@ include_directories ("${DEPROOT}")
 configure_file ("${INCROOT}/Config.h.in" "${PROJECT_BINARY_DIR}/include/Config.h")
 include_directories ("${PROJECT_BINARY_DIR}/include")
 
-set (SRC
+set (SRC_LIB
 	"${SRCROOT}/Archive.cpp"
 	"${INCROOT}/Archive.h"
 	"${SRCROOT}/ArchiveBuilder.cpp"
@@ -35,7 +35,9 @@ set (SRC
 	"${INCROOT}/Compression.h"
 	"${INCROOT}/Version.h"
 )
-source_group ("zap" FILES ${SRC})
+source_group ("zap" FILES ${SRC_LIB})
+
+set (SRC ${SRC_LIB})
 
 if (ZAP_COMPRESS_LZ4)
 	set (SRC_LZ4
@@ -55,7 +57,7 @@ set (CMAKE_RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/bin")
 add_library (ZAP STATIC ${SRC})
 
 if (CMAKE_COMPILER_IS_GNUCXX)
-	set_source_files_properties (${SRC} PROPERTIES COMPILE_FLAGS "-std=c++11 -Wno-multichar")
+	set_source_files_properties (${SRC_LIB} PROPERTIES COMPILE_FLAGS "-std=c++11 -Wno-multichar")
 endif ()
 
 if (ZAP_BUILD_DOC)

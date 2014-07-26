@@ -29,6 +29,7 @@ THE SOFTWARE.*/
 #include <fstream>
 #include <iostream>
 #include <iomanip>
+#include <string>
 
 namespace cli
 {

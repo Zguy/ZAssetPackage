@@ -32,7 +32,6 @@ namespace ZAP
 	{
 		COMPRESS_NONE = 0, ///< No compression.
 		COMPRESS_LZ4  = 1, ///< LZ4 compression.
-		COMPRESS_LAST
 	};
 
 	///\brief Returns whether this build of the library supports a given compression method.

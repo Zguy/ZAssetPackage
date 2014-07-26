@@ -193,8 +193,6 @@ namespace ZAP
 			return false;
 		if (header.version < VERSION_MIN || header.version > VERSION_MAX)
 			return false;
-		if (header.compression < COMPRESS_NONE || header.compression >= COMPRESS_LAST)
-			return false;
 
 		return true;
 	}

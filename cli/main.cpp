@@ -43,8 +43,8 @@ enum optionIndex
 
 option::ArgStatus checkCompress(const option::Option &option, bool msg)
 {
-	int compression = std::atoi(option.arg);
-	if (compression < ZAP::COMPRESS_NONE || compression >= ZAP::COMPRESS_LAST)
+	ZAP::Compression compression = static_cast<ZAP::Compression>(std::atoi(option.arg));
+	if (!ZAP::supportsCompression(compression))
 		return option::ARG_ILLEGAL;
 	else
 		return option::ARG_OK;
@@ -116,7 +116,8 @@ std::string getPrettyCompression(ZAP::Compression compression)
 {
 	switch (compression)
 	{
-	case ZAP::COMPRESS_LZ4: return "LZ4";
+	case ZAP::COMPRESS_NONE: return "None";
+	case ZAP::COMPRESS_LZ4:  return "LZ4";
 	default: return "Unknown";
 	}
 }

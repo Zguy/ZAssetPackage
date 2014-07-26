@@ -109,7 +109,7 @@ namespace ZAP
 
 	bool ArchiveBuilder::build(std::ostream &stream, Compression compression)
 	{
-		if (compression < COMPRESS_NONE || compression >= COMPRESS_LAST || !supportsCompression(compression))
+		if (!supportsCompression(compression))
 		{
 			return false;
 		}

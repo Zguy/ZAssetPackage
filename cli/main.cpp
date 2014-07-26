@@ -146,16 +146,16 @@ void print(const ZAP::Archive &archive)
 		"\nFile count: " << archive.getFileCount() <<
 		"\n\n";
 
-	std::vector<std::string> filelist;
+	ZAP::Archive::EntryList filelist;
 	archive.getFileList(filelist);
 
 	static const int fieldMargin = 1;
 	int field0 = 4+fieldMargin, field1 = 10+fieldMargin, field2 = 12+fieldMargin;
-	for (const std::string &file : filelist)
+	for (const ZAP::Archive::Entry &entry : filelist)
 	{
-		int newField0 = file.size()+fieldMargin;
-		int newField1 = getPrettySize(archive.getCompressedSize(file)).size()+fieldMargin;
-		int newField2 = getPrettySize(archive.getDecompressedSize(file)).size()+fieldMargin;
+		int newField0 = entry.virtual_path.size()+fieldMargin;
+		int newField1 = getPrettySize(entry.compressed_size).size()+fieldMargin;
+		int newField2 = getPrettySize(entry.decompressed_size).size()+fieldMargin;
 		if (newField0 > field0)
 			field0 = newField0;
 		if (newField1 > field1)
@@ -177,18 +177,16 @@ void print(const ZAP::Archive &archive)
 		std::setw(field2) << "Decomp. size" <<
 		std::resetiosflags(sizeFlags) <<
 		'\n';
-	for (const std::string &file : filelist)
+	for (const ZAP::Archive::Entry &file : filelist)
 	{
-		std::uint32_t compSize = archive.getCompressedSize(file);
-		std::uint32_t decompSize = archive.getDecompressedSize(file);
-		totalComp += compSize;
-		totalDecomp += decompSize;
+		totalComp += file.compressed_size;
+		totalDecomp += file.decompressed_size;
 		std::cout <<
 			std::setiosflags(nameFlags) <<
-			std::setw(field0) << file <<
+			std::setw(field0) << file.virtual_path <<
 			std::setiosflags(sizeFlags) <<
-			std::setw(field1) << getPrettySize(compSize) <<
-			std::setw(field2) << getPrettySize(decompSize) <<
+			std::setw(field1) << getPrettySize(file.compressed_size) <<
+			std::setw(field2) << getPrettySize(file.decompressed_size) <<
 			std::resetiosflags(sizeFlags) <<
 			'\n';
 	}

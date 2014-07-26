@@ -37,6 +37,17 @@ namespace ZAP
 	class Archive
 	{
 	public:
+		///\brief File in archive.
+		struct Entry
+		{
+			Entry(const std::string &vp, std::uint32_t ds, std::uint32_t cs)
+				: virtual_path(vp), decompressed_size(ds), compressed_size(cs) {}
+			std::string virtual_path;        ///< Virtual path of the file.
+			std::uint32_t decompressed_size; ///< Size of the file when decompressed.
+			std::uint32_t compressed_size;   ///< Size of the file when compressed.
+		};
+		typedef std::vector<Entry> EntryList;
+
 		///\brief Default constructor.
 		Archive();
 
@@ -103,7 +114,7 @@ namespace ZAP
 
 		///\brief Gets the list of files in the archive.
 		///\param [out] list The list.
-		void getFileList(std::vector<std::string> &list) const;
+		void getFileList(EntryList &list) const;
 
 	private:
 		struct ArchiveHeader

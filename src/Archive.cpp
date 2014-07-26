@@ -148,11 +148,13 @@ namespace ZAP
 		return lookupTable.size();
 	}
 
-	void Archive::getFileList(std::vector<std::string> &list) const
+	void Archive::getFileList(EntryList &list) const
 	{
-		for (EntryMap::const_reference entry : lookupTable)
+		list.reserve(lookupTable.size());
+		for (EntryMap::const_reference mapRef : lookupTable)
 		{
-			list.push_back(entry.first);
+			const ArchiveEntry &entry = mapRef.second;
+			list.emplace_back(mapRef.first, entry.decompressed_size, entry.compressed_size);
 		}
 	}
 

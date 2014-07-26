@@ -106,7 +106,7 @@ namespace cli
 		ZAP::Archive archive;
 		if (!archive.openFile(path))
 		{
-			std::cerr << "Could not open file" << std::endl;
+			std::cerr << "Could not open archive" << std::endl;
 			return 1;
 		}
 

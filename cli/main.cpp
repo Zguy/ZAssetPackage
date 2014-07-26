@@ -41,8 +41,11 @@ option::ArgStatus checkCompress(const option::Option &option, bool msg)
 const option::Descriptor usage[] =
 {
 	{ cli::HELP,     0, "h", "help",     option::Arg::None, "--help, -h  \tPrint usage and exit" },
-	{ cli::PRINT,    0, "p", "print",    option::Arg::None, "--print, -p  \tPrint contents of archive." },
+	{ cli::LIST,     0, "l", "list",     option::Arg::None, "--list, -p  \tPrint contents of archive." },
+	{ cli::EXTRACT,  0, "e", "extract",  option::Arg::None, "--extract, -e  \tExtract contents of archive to directory." },
+	{ cli::PACK,     0, "p", "pack",     option::Arg::None, "--pack, -p  \tPack files into archive." },
 	{ cli::COMPRESS, 0, "c", "compress", checkCompress,     "--compress, -c  \tSet compression for pack." },
+	{ cli::RAW,      0, "", "raw",       option::Arg::None, "--raw  \tExtract raw data (compressed)." },
 	{0,0,0,0,0,0}
 };
 
@@ -67,7 +70,7 @@ int main(int argc, char *argv[])
 		return 0;
 	}
 
-	if (options[cli::PRINT] || options[cli::EXTRACT])
+	if (options[cli::LIST] || options[cli::EXTRACT])
 	{
 		return cli::extract(parse, options);
 	}

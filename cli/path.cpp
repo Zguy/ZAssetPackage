@@ -19,23 +19,41 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.*/
-#ifndef options_h__
-#define options_h__
+#include "path.h"
 
-#include "optionparser.h"
+#include <sys/stat.h>
+#include <direct.h>
 
 namespace cli
 {
-	enum optionIndex
+	void cleanPath(std::string &path)
 	{
-		UNKNOWN,
-		HELP,
-		LIST,
-		EXTRACT,
-		PACK,
-		COMPRESS
-		RAW
-	};
-}
+		for (std::string::iterator it = path.begin(); it != path.end(); ++it)
+		{
+			if ((*it) == '\\')
+				(*it) = '/';
+		}
+	}
 
-#endif // options_h__
+	bool isDirectory(const std::string &path)
+	{
+		struct stat sb;
+		return (stat(path.c_str(), &sb) == 0 && (sb.st_mode & _S_IFMT) == _S_IFDIR);
+	}
+
+	bool createPath(const std::string &path)
+	{
+		std::string::size_type end = path.find_last_of('/')+1;
+		for (std::string::size_type index = path.find_first_of('/', 0); index < end; index = path.find_first_of('/', index+1))
+		{
+			std::string part = path.substr(0, index);
+			if (!isDirectory(part))
+			{
+				if (_mkdir(part.c_str()) != 0)
+					return false;
+			}
+		}
+
+		return true;
+	}
+}

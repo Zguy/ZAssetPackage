@@ -19,23 +19,18 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.*/
-#ifndef options_h__
-#define options_h__
+#ifndef path_h__
+#define path_h__
 
-#include "optionparser.h"
+#include <string>
 
 namespace cli
 {
-	enum optionIndex
-	{
-		UNKNOWN,
-		HELP,
-		LIST,
-		EXTRACT,
-		PACK,
-		COMPRESS
-		RAW
-	};
+	void cleanPath(std::string &path);
+
+	bool isDirectory(const std::string &path);
+
+	bool createPath(const std::string &path);
 }
 
-#endif // options_h__
+#endif // path_h__

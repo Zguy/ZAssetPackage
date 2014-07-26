@@ -8,6 +8,8 @@ set (SRC_CLI
 	"${CLIROOT}/options.h"
 	"${CLIROOT}/pack.h"
 	"${CLIROOT}/pack.cpp"
+	"${CLIROOT}/path.h"
+	"${CLIROOT}/path.cpp"
 	"${CLIROOT}/pretty.h"
 	"${CLIROOT}/pretty.cpp"
 )

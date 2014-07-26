@@ -22,9 +22,11 @@ THE SOFTWARE.*/
 #include "extract.h"
 #include "pretty.h"
 #include "options.h"
+#include "path.h"
 
 #include <ZAP/Archive.h>
 
+#include <fstream>
 #include <iostream>
 #include <iomanip>
 
@@ -107,13 +109,62 @@ namespace cli
 			return 1;
 		}
 
-		if (options[PRINT])
+		if (options[LIST])
 		{
 			print(archive);
 		}
 		else
 		{
+			std::string outPath = ".";
+			if (parse.nonOptionsCount() >= 2)
+			{
+				outPath = parse.nonOption(1);
+			}
+			if (!isDirectory(outPath))
+			{
+				std::cerr << "Output is not a directory" << std::endl;
+				return 1;
+			}
 
+			ZAP::Archive::EntryList list;
+			archive.getFileList(list);
+
+			for (const ZAP::Archive::Entry &entry : list)
+			{
+				std::string fullpath = (outPath + '/' + entry.virtual_path);
+				cleanPath(fullpath);
+				if (!createPath(fullpath))
+				{
+					std::cerr << "Could not create path " << fullpath << std::endl;
+					continue;
+				}
+
+				std::fstream stream(fullpath.c_str(), std::ios::out | std::ios::binary | std::ios::trunc);
+				if (!stream.is_open())
+				{
+					std::cerr << "Could not create file " << entry.virtual_path << std::endl;
+					continue;
+				}
+
+				char *data;
+				size_t size;
+
+				bool extractSuccess = false;
+				if (options[RAW])
+					extractSuccess = archive.getRawData(entry.virtual_path, data, size);
+				else
+					extractSuccess = archive.getData(entry.virtual_path, data, size);
+
+				if (!extractSuccess)
+				{
+					std::cerr << "Could not extract file " << entry.virtual_path << std::endl;
+					continue;
+				}
+
+				stream.write(data, size);
+
+				delete[] data;
+			}
 		}
 
 		return 0;

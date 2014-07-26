@@ -34,6 +34,7 @@ namespace cli
 		EXTRACT,
 		PACK,
 		COMPRESS,
+		RECURSIVE,
 		RAW
 	};
 }

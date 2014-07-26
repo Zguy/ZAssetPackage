@@ -20,11 +20,64 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.*/
 #include "pack.h"
+#include "path.h"
+
+#include <ZAP/ArchiveBuilder.h>
+
+#include <string>
+#include <iostream>
+
+#include "options.h"
 
 namespace cli
 {
+	namespace
+	{
+		void addDirectory(ZAP::ArchiveBuilder &archive, const std::string &path, bool recursive)
+		{
+
+		}
+		void addPath(ZAP::ArchiveBuilder &archive, const std::string &path, bool recursive)
+		{
+			if (isDirectory(path))
+			{
+				if (recursive)
+					addDirectory(archive, path, recursive);
+			}
+			else
+			{
+				archive.addFile(path, path);
+			}
+		}
+	}
+
 	int pack(option::Parser &parse, option::Option *options)
 	{
+		std::string outPath = "./archive.zap";
+		if (options[PACK].arg != nullptr)
+			outPath = options[PACK].arg;
+
+		bool recursive = (options[RECURSIVE] != nullptr);
+
+		ZAP::ArchiveBuilder archive;
+
+		for (int i = 0; i < parse.nonOptionsCount(); ++i)
+		{
+			std::string path = parse.nonOption(i);
+			cleanPath(path);
+			addPath(archive, path, recursive);
+		}
+
+		ZAP::Compression compression = ZAP::COMPRESS_NONE;
+		if (options[COMPRESS].arg != nullptr)
+			compression = static_cast<ZAP::Compression>(std::atoi(options[COMPRESS].arg));
+
+		if (!archive.buildFile(outPath, compression))
+		{
+			std::cerr << "Could not build archive" << std::endl;
+			return 1;
+		}
+
 		return 0;
 	}
 }

@@ -29,6 +29,14 @@ THE SOFTWARE.*/
 
 #include <iostream>
 
+option::ArgStatus checkPack(const option::Option &option, bool msg)
+{
+	if (option.arg != nullptr)
+		return option::ARG_OK;
+	else
+		return option::ARG_IGNORE;
+}
+
 option::ArgStatus checkCompress(const option::Option &option, bool msg)
 {
 	ZAP::Compression compression = static_cast<ZAP::Compression>(std::atoi(option.arg));
@@ -40,12 +48,13 @@ option::ArgStatus checkCompress(const option::Option &option, bool msg)
 
 const option::Descriptor usage[] =
 {
-	{ cli::HELP,     0, "h", "help",     option::Arg::None, "--help, -h  \tPrint usage and exit" },
-	{ cli::LIST,     0, "l", "list",     option::Arg::None, "--list, -p  \tPrint contents of archive." },
-	{ cli::EXTRACT,  0, "e", "extract",  option::Arg::None, "--extract, -e  \tExtract contents of archive to directory." },
-	{ cli::PACK,     0, "p", "pack",     option::Arg::None, "--pack, -p  \tPack files into archive." },
-	{ cli::COMPRESS, 0, "c", "compress", checkCompress,     "--compress, -c  \tSet compression for pack." },
-	{ cli::RAW,      0, "", "raw",       option::Arg::None, "--raw  \tExtract raw data (compressed)." },
+	{ cli::HELP,      0, "h", "help",      option::Arg::None, "--help, -h  \tPrint usage and exit" },
+	{ cli::LIST,      0, "l", "list",      option::Arg::None, "--list, -p  \tPrint contents of archive." },
+	{ cli::EXTRACT,   0, "e", "extract",   option::Arg::None, "--extract, -e  \tExtract contents of archive to directory." },
+	{ cli::PACK,      0, "p", "pack",      checkPack,         "--pack, -p [output.zap]  \tPack files into archive." },
+	{ cli::COMPRESS,  0, "c", "compress",  checkCompress,     "--compress, -c  \tSet compression for pack." },
+	{ cli::RECURSIVE, 0, "r", "recursive", option::Arg::None, "--recursive, -r  \tRecursively add files to the archive." },
+	{ cli::RAW,       0, "", "raw",        option::Arg::None, "--raw  \tExtract raw data (compressed)." },
 	{0,0,0,0,0,0}
 };
 

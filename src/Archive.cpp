@@ -111,18 +111,17 @@ namespace ZAP
 
 		stream->seekg(entry->index);
 
-		std::uint32_t size = entry->decompressed_size;
 		char *data = new char[entry->compressed_size];
 		stream->read(data, entry->compressed_size);
 
-		if (!decompress(getCompression(), data, entry->compressed_size, size))
+		if (!decompress(getCompression(), data, entry->compressed_size, entry->decompressed_size))
 		{
 			delete[] data;
 			return false;
 		}
 
 		return_data = data;
-		return_size = size;
+		return_size = entry->decompressed_size;
 		return true;
 	}
 

@@ -94,7 +94,7 @@ namespace ZAP
 		///\param virtual_path Full pathname of the virtual file.
 		bool hasFile(const std::string &virtual_path) const;
 
-		///\brief Returns the data for a file.
+		///\brief Extracts the data of a file.
 		///\param virtual_path Full pathname of the virtual file.
 		///\param [out] data The data, untouched if failed.
 		///\param [out] size The data size, untouched if failed.

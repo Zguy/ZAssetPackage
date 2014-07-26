@@ -95,7 +95,7 @@ namespace cli
 	{
 		if (parse.nonOptionsCount() < 1)
 		{
-			std::cout << "Filename required" << std::endl;
+			std::cerr << "Filename required" << std::endl;
 			return 1;
 		}
 		std::string path = parse.nonOption(0);
@@ -103,7 +103,7 @@ namespace cli
 		ZAP::Archive archive;
 		if (!archive.openFile(path))
 		{
-			std::cout << "Could not open file" << std::endl;
+			std::cerr << "Could not open file" << std::endl;
 			return 1;
 		}
 

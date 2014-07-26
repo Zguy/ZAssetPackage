@@ -56,7 +56,7 @@ int main(int argc, char *argv[])
 
 	if (parse.error())
 	{
-		std::cout << "Invalid options\n";
+		std::cerr << "Invalid options\n";
 		option::printUsage(std::cout, usage);
 		return 1;
 	}

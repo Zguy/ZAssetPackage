@@ -73,7 +73,7 @@ namespace ZAP
 	{
 		delete stream;
 		stream = nullptr;
-		header = ArchiveHeader();
+		header = Header();
 		lookupTable.clear();
 	}
 	bool Archive::isOpen() const
@@ -100,9 +100,12 @@ namespace ZAP
 		return (lookupTable.find(virtual_path) != lookupTable.cend());
 	}
 
-	bool Archive::getData(const std::string &virtual_path, char *&return_data, size_t &return_size) const
+	bool Archive::getData(const std::string &virtual_path, char *&data, size_t &size) const
 	{
-		const ArchiveEntry *entry = getEntry(virtual_path);
+		return getData(getEntry(virtual_path), data, size);
+	}
+	bool Archive::getData(const Entry *entry, char *&return_data, size_t &return_size) const
+	{
 		if (entry == nullptr || !isSupportedCompression())
 			return false;
 
@@ -127,7 +130,10 @@ namespace ZAP
 
 	bool Archive::getRawData(const std::string &virtual_path, char *&data, size_t &size) const
 	{
-		const ArchiveEntry *entry = getEntry(virtual_path);
+		return getRawData(getEntry(virtual_path), data, size);
+	}
+	bool Archive::getRawData(const Entry *entry, char *&data, size_t &size) const
+	{
 		if (entry == nullptr)
 			return false;
 
@@ -142,21 +148,16 @@ namespace ZAP
 		return true;
 	}
 
-	std::uint32_t Archive::getDecompressedSize(const std::string &virtual_path) const
+	const Archive::Entry *Archive::getEntry(const std::string &virtual_path) const
 	{
-		const ArchiveEntry *entry = getEntry(virtual_path);
-		if (entry == nullptr)
-			return 0;
+		if (!isOpen())
+			return nullptr;
 
-		return entry->decompressed_size;
-	}
-	std::uint32_t Archive::getCompressedSize(const std::string &virtual_path) const
-	{
-		const ArchiveEntry *entry = getEntry(virtual_path);
-		if (entry == nullptr)
-			return 0;
+		EntryMap::const_iterator it = lookupTable.find(virtual_path);
+		if (it == lookupTable.cend())
+			return nullptr;
 
-		return entry->compressed_size;
+		return &(*it).second;
 	}
 
 	std::size_t Archive::getFileCount() const
@@ -169,21 +170,9 @@ namespace ZAP
 		list.reserve(lookupTable.size());
 		for (EntryMap::const_reference mapRef : lookupTable)
 		{
-			const ArchiveEntry &entry = mapRef.second;
-			list.emplace_back(mapRef.first, entry.decompressed_size, entry.compressed_size);
+			const Entry &entry = mapRef.second;
+			list.push_back(&entry);
 		}
-	}
-
-	const Archive::ArchiveEntry *Archive::getEntry(const std::string &virtual_path) const
-	{
-		if (!isOpen())
-			return nullptr;
-
-		EntryMap::const_iterator it = lookupTable.find(virtual_path);
-		if (it == lookupTable.cend())
-			return nullptr;
-
-		return &(*it).second;
 	}
 
 	bool Archive::loadStream()
@@ -238,7 +227,8 @@ namespace ZAP
 				filename += c;
 			}
 
-			ArchiveEntry entry;
+			Entry entry;
+			entry.virtual_path = filename;
 			readField(stream, &entry.index);
 			readField(stream, &entry.decompressed_size);
 			readField(stream, &entry.compressed_size);

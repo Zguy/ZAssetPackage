@@ -46,11 +46,11 @@ namespace cli
 
 		static const int fieldMargin = 1;
 		int field0 = 4+fieldMargin, field1 = 10+fieldMargin, field2 = 12+fieldMargin;
-		for (const ZAP::Archive::Entry &entry : filelist)
+		for (const ZAP::Archive::Entry *entry : filelist)
 		{
-			int newField0 = entry.virtual_path.size()+fieldMargin;
-			int newField1 = getPrettySize(entry.compressed_size).size()+fieldMargin;
-			int newField2 = getPrettySize(entry.decompressed_size).size()+fieldMargin;
+			int newField0 = entry->virtual_path.size()+fieldMargin;
+			int newField1 = getPrettySize(entry->compressed_size).size()+fieldMargin;
+			int newField2 = getPrettySize(entry->decompressed_size).size()+fieldMargin;
 			if (newField0 > field0)
 				field0 = newField0;
 			if (newField1 > field1)
@@ -72,16 +72,16 @@ namespace cli
 			std::setw(field2) << "Decomp. size" <<
 			std::resetiosflags(sizeFlags) <<
 			'\n';
-		for (const ZAP::Archive::Entry &file : filelist)
+		for (const ZAP::Archive::Entry *entry : filelist)
 		{
-			totalComp += file.compressed_size;
-			totalDecomp += file.decompressed_size;
+			totalComp += entry->compressed_size;
+			totalDecomp += entry->decompressed_size;
 			std::cout <<
 				std::setiosflags(nameFlags) <<
-				std::setw(field0) << file.virtual_path <<
+				std::setw(field0) << entry->virtual_path <<
 				std::setiosflags(sizeFlags) <<
-				std::setw(field1) << getPrettySize(file.compressed_size) <<
-				std::setw(field2) << getPrettySize(file.decompressed_size) <<
+				std::setw(field1) << getPrettySize(entry->compressed_size) <<
+				std::setw(field2) << getPrettySize(entry->decompressed_size) <<
 				std::resetiosflags(sizeFlags) <<
 				'\n';
 		}
@@ -130,9 +130,9 @@ namespace cli
 			ZAP::Archive::EntryList list;
 			archive.getFileList(list);
 
-			for (const ZAP::Archive::Entry &entry : list)
+			for (const ZAP::Archive::Entry *entry : list)
 			{
-				std::string fullpath = (outPath + '/' + entry.virtual_path);
+				std::string fullpath = (outPath + '/' + entry->virtual_path);
 				cleanPath(fullpath);
 				if (!createPath(fullpath))
 				{
@@ -143,7 +143,7 @@ namespace cli
 				std::fstream stream(fullpath.c_str(), std::ios::out | std::ios::binary | std::ios::trunc);
 				if (!stream.is_open())
 				{
-					std::cerr << "Could not create file " << entry.virtual_path << std::endl;
+					std::cerr << "Could not create entry " << entry->virtual_path << std::endl;
 					continue;
 				}
 
@@ -152,13 +152,13 @@ namespace cli
 
 				bool extractSuccess = false;
 				if (options[RAW])
-					extractSuccess = archive.getRawData(entry.virtual_path, data, size);
+					extractSuccess = archive.getRawData(entry, data, size);
 				else
-					extractSuccess = archive.getData(entry.virtual_path, data, size);
+					extractSuccess = archive.getData(entry, data, size);
 
 				if (!extractSuccess)
 				{
-					std::cerr << "Could not extract file " << entry.virtual_path << std::endl;
+					std::cerr << "Could not extract entry " << entry->virtual_path << std::endl;
 					continue;
 				}
 

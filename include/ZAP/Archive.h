@@ -40,13 +40,12 @@ namespace ZAP
 		///\brief File in archive.
 		struct Entry
 		{
-			Entry(const std::string &vp, std::uint32_t ds, std::uint32_t cs)
-				: virtual_path(vp), decompressed_size(ds), compressed_size(cs) {}
 			std::string virtual_path;        ///< Virtual path of the file.
+			std::uint32_t index;             ///< Offset in the archive file.
 			std::uint32_t decompressed_size; ///< Size of the file when decompressed in bytes.
 			std::uint32_t compressed_size;   ///< Size of the file when compressed in bytes.
 		};
-		typedef std::vector<Entry> EntryList;
+		typedef std::vector<const Entry*> EntryList;
 
 		///\brief Default constructor.
 		Archive();
@@ -100,6 +99,7 @@ namespace ZAP
 		///\param [out] size The data size, untouched if failed.
 		///\return false if the virtual_path does not exist, or uses an unsupported compression.
 		bool getData(const std::string &virtual_path, char *&data, size_t &size) const;
+		bool getData(const Entry *entry, char *&data, size_t &size) const;
 
 		///\brief Extracts the raw data of a file.
 		///
@@ -110,14 +110,12 @@ namespace ZAP
 		///\param [out] size The data size, untouched if failed.
 		///\return false if the virtual_path does not exist.
 		bool getRawData(const std::string &virtual_path, char *&data, size_t &size) const;
+		bool getRawData(const Entry *entry, char *&data, size_t &size) const;
 
-		///\brief Returns the decompressed size of a file in bytes.
+		///\brief Returns a pointer to the Entry of a file.
 		///\param virtual_path Full pathname of the virtual file.
-		std::uint32_t getDecompressedSize(const std::string &virtual_path) const;
-
-		///\brief Returns the compressed size of a file in bytes.
-		///\param virtual_path Full pathname of the virtual file.
-		std::uint32_t getCompressedSize(const std::string &virtual_path) const;
+		///\return null if the virtual_path does not exist.
+		const Entry *getEntry(const std::string &virtual_path) const;
 
 		///\brief Returns the number of files in the archive.
 		std::size_t getFileCount() const;
@@ -127,22 +125,14 @@ namespace ZAP
 		void getFileList(EntryList &list) const;
 
 	private:
-		struct ArchiveHeader
+		struct Header
 		{
-			ArchiveHeader() : magic(0), version(0), compression(0) {}
+			Header() : magic(0), version(0), compression(0) {}
 			std::uint16_t magic;
 			std::uint8_t version;
 			std::uint8_t compression;
 		};
-		struct ArchiveEntry
-		{
-			std::uint32_t index;
-			std::uint32_t decompressed_size;
-			std::uint32_t compressed_size;
-		};
-		typedef std::unordered_map<std::string, ArchiveEntry> EntryMap;
-
-		const ArchiveEntry *getEntry(const std::string &virtual_path) const;
+		typedef std::unordered_map<std::string, Entry> EntryMap;
 
 		bool loadStream();
 		bool parseHeader();
@@ -150,7 +140,7 @@ namespace ZAP
 
 		std::istream *stream;
 
-		ArchiveHeader header;
+		Header header;
 		EntryMap lookupTable;
 	};
 }

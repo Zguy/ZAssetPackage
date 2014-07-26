@@ -43,8 +43,8 @@ namespace ZAP
 			Entry(const std::string &vp, std::uint32_t ds, std::uint32_t cs)
 				: virtual_path(vp), decompressed_size(ds), compressed_size(cs) {}
 			std::string virtual_path;        ///< Virtual path of the file.
-			std::uint32_t decompressed_size; ///< Size of the file when decompressed.
-			std::uint32_t compressed_size;   ///< Size of the file when compressed.
+			std::uint32_t decompressed_size; ///< Size of the file when decompressed in bytes.
+			std::uint32_t compressed_size;   ///< Size of the file when compressed in bytes.
 		};
 		typedef std::vector<Entry> EntryList;
 
@@ -101,11 +101,11 @@ namespace ZAP
 		///\return false if the virtual_path does not exist, or uses an unsupported compression.
 		bool getData(const std::string &virtual_path, char *&data, size_t &size) const;
 
-		///\brief Returns the decompressed size of a file.
+		///\brief Returns the decompressed size of a file in bytes.
 		///\param virtual_path Full pathname of the virtual file.
 		std::uint32_t getDecompressedSize(const std::string &virtual_path) const;
 
-		///\brief Returns the compressed size of a file.
+		///\brief Returns the compressed size of a file in bytes.
 		///\param virtual_path Full pathname of the virtual file.
 		std::uint32_t getCompressedSize(const std::string &virtual_path) const;
 

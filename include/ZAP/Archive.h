@@ -101,6 +101,16 @@ namespace ZAP
 		///\return false if the virtual_path does not exist, or uses an unsupported compression.
 		bool getData(const std::string &virtual_path, char *&data, size_t &size) const;
 
+		///\brief Extracts the raw data of a file.
+		///
+		/// If the archive is compressed, this will return the compressed data.
+		/// If not, this will return the same as getData.
+		///\param virtual_path Full pathname of the virtual file.
+		///\param [out] data The data, untouched if failed.
+		///\param [out] size The data size, untouched if failed.
+		///\return false if the virtual_path does not exist.
+		bool getRawData(const std::string &virtual_path, char *&data, size_t &size) const;
+
 		///\brief Returns the decompressed size of a file in bytes.
 		///\param virtual_path Full pathname of the virtual file.
 		std::uint32_t getDecompressedSize(const std::string &virtual_path) const;

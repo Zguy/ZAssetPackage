@@ -125,6 +125,23 @@ namespace ZAP
 		return true;
 	}
 
+	bool Archive::getRawData(const std::string &virtual_path, char *&data, size_t &size) const
+	{
+		const ArchiveEntry *entry = getEntry(virtual_path);
+		if (entry == nullptr)
+			return false;
+
+		if (entry->compressed_size == 0)
+			return false;
+
+		stream->seekg(entry->index);
+
+		size = entry->compressed_size;
+		data = new char[entry->compressed_size];
+		stream->read(data, entry->compressed_size);
+		return true;
+	}
+
 	std::uint32_t Archive::getDecompressedSize(const std::string &virtual_path) const
 	{
 		const ArchiveEntry *entry = getEntry(virtual_path);

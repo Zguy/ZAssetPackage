@@ -33,7 +33,7 @@ namespace cli
 		LIST,
 		EXTRACT,
 		PACK,
-		COMPRESS
+		COMPRESS,
 		RAW
 	};
 }

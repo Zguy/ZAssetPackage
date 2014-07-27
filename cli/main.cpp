@@ -28,6 +28,7 @@ THE SOFTWARE.*/
 #include "options.h"
 
 #include <iostream>
+#include <memory>
 
 option::ArgStatus checkPack(const option::Option &option, bool msg)
 {
@@ -62,9 +63,9 @@ int main(int argc, char *argv[])
 {
 	argc-=(argc>0); argv+=(argc>0); // Skip program name
 	option::Stats stats(true, usage, argc, argv);
-	option::Option *options = new option::Option[stats.options_max];
-	option::Option *buffer = new option::Option[stats.buffer_max];
-	option::Parser parse(true, usage, argc, argv, options, buffer);
+	std::unique_ptr<option::Option[]> options(new option::Option[stats.options_max]);
+	std::unique_ptr<option::Option[]> buffer(new option::Option[stats.buffer_max]);
+	option::Parser parse(true, usage, argc, argv, options.get(), buffer.get());
 
 	if (parse.error() || (options[cli::UNKNOWN].count() == parse.optionsCount()))
 	{
@@ -81,14 +82,12 @@ int main(int argc, char *argv[])
 
 	if (options[cli::LIST] || options[cli::EXTRACT])
 	{
-		return cli::extract(parse, options);
+		return cli::extract(parse, options.get());
 	}
 	else if (options[cli::PACK])
 	{
-		return cli::pack(parse, options);
+		return cli::pack(parse, options.get());
 	}
 
-	delete[] options;
-	delete[] buffer;
 	return 0;
 }

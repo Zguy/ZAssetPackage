@@ -66,14 +66,14 @@ int main(int argc, char *argv[])
 	option::Option *buffer = new option::Option[stats.buffer_max];
 	option::Parser parse(true, usage, argc, argv, options, buffer);
 
-	if (parse.error())
+	if (parse.error() || (options[cli::UNKNOWN].count() == parse.optionsCount()))
 	{
 		std::cerr << "Invalid options\n";
 		option::printUsage(std::cout, usage);
 		return 1;
 	}
 
-	if (options[cli::HELP] || argc == 0 || (options[cli::UNKNOWN].count() == parse.optionsCount()))
+	if (options[cli::HELP] || argc == 0)
 	{
 		option::printUsage(std::cout, usage);
 		return 0;

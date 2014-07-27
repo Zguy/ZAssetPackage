@@ -1,17 +1,15 @@
-set (CLIROOT "${PROJECT_SOURCE_DIR}/cli")
-
 set (SRC_CLI
-	"${CLIROOT}/main.cpp"
-	"${CLIROOT}/extract.h"
-	"${CLIROOT}/extract.cpp"
-	"${CLIROOT}/optionparser.h"
-	"${CLIROOT}/options.h"
-	"${CLIROOT}/pack.h"
-	"${CLIROOT}/pack.cpp"
-	"${CLIROOT}/path.h"
-	"${CLIROOT}/path.cpp"
-	"${CLIROOT}/pretty.h"
-	"${CLIROOT}/pretty.cpp"
+	"main.cpp"
+	"extract.h"
+	"extract.cpp"
+	"optionparser.h"
+	"options.h"
+	"pack.h"
+	"pack.cpp"
+	"path.h"
+	"path.cpp"
+	"pretty.h"
+	"pretty.cpp"
 )
 source_group ("cli" FILES ${SRC_CLI})
 

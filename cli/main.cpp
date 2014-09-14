@@ -50,7 +50,7 @@ option::ArgStatus checkCompress(const option::Option &option, bool msg)
 const option::Descriptor usage[] =
 {
 	{ cli::HELP,      0, "h", "help",      option::Arg::None, "--help, -h  \tPrint usage and exit" },
-	{ cli::LIST,      0, "l", "list",      option::Arg::None, "--list, -p  \tPrint contents of archive." },
+	{ cli::LIST,      0, "l", "list",      option::Arg::None, "--list, -l  \tPrint contents of archive." },
 	{ cli::EXTRACT,   0, "e", "extract",   option::Arg::None, "--extract, -e  \tExtract contents of archive to directory." },
 	{ cli::PACK,      0, "p", "pack",      checkPack,         "--pack, -p [output.zap]  \tPack files into archive." },
 	{ cli::COMPRESS,  0, "c", "compress",  checkCompress,     "--compress, -c  \tSet compression for pack." },

@@ -35,6 +35,11 @@ namespace cli
 			if ((*it) == '\\')
 				(*it) = '/';
 		}
+
+		if (path.back() == '*')
+			path.pop_back();
+		if (path.back() == '/')
+			path.pop_back();
 	}
 
 	bool isDirectory(const std::string &path)

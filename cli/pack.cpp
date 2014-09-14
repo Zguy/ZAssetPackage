@@ -21,33 +21,79 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.*/
 #include "pack.h"
 #include "path.h"
+#include "options.h"
 
 #include <ZAP/ArchiveBuilder.h>
 
 #include <string>
 #include <iostream>
+#include <cstring>
 
-#include "options.h"
+#ifdef _WIN32
+#include <Windows.h>
+#else
+#include <dirent.h>
+#endif
 
 namespace cli
 {
 	namespace
 	{
+		void addPath(ZAP::ArchiveBuilder &archive, const std::string &path)
+		{
+			archive.addFile(path, path);
+		}
 		void addDirectory(ZAP::ArchiveBuilder &archive, const std::string &path, bool recursive)
 		{
+#ifdef _WIN32
+			HANDLE dir;
+			WIN32_FIND_DATAA ent;
 
-		}
-		void addPath(ZAP::ArchiveBuilder &archive, const std::string &path, bool recursive)
-		{
-			if (isDirectory(path))
+			if ((dir = FindFirstFileA((path + "/*").c_str(), &ent)) != INVALID_HANDLE_VALUE)
 			{
-				if (recursive)
-					addDirectory(archive, path, recursive);
+				do
+				{
+					if ((std::strcmp(ent.cFileName, ".") == 0) || (std::strcmp(ent.cFileName, "..") == 0))
+						continue;
+
+					if (ent.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
+					{
+						if (recursive)
+							addDirectory(archive, path + '/' + ent.cFileName, recursive);
+					}
+					else
+					{
+						addPath(archive, path + '/' + ent.cFileName);
+					}
+				} while (FindNextFileA(dir, &ent));
+
+				FindClose(dir);
 			}
-			else
+#else
+			DIR *dir;
+			struct dirent *ent;
+
+			if ((dir = opendir(path.c_str())) != nullptr)
 			{
-				archive.addFile(path, path);
+				while ((ent = readdir(dir)) != nullptr)
+				{
+					if ((std::strcmp(ent->d_name, ".") == 0) || (std::strcmp(ent->d_name, "..") == 0))
+						continue;
+
+					if (ent->d_type == DT_DIR)
+					{
+						if (recursive)
+							addDirectory(archive, path + '/' + ent->d_name, recursive);
+					}
+					else
+					{
+						addPath(archive, path + '/' + ent->d_name);
+					}
+				}
+
+				closedir(dir);
 			}
+#endif
 		}
 	}
 
@@ -65,7 +111,11 @@ namespace cli
 		{
 			std::string path = parse.nonOption(i);
 			cleanPath(path);
-			addPath(archive, path, recursive);
+
+			if (isDirectory(path))
+				addDirectory(archive, path, recursive);
+			else
+				addPath(archive, path);
 		}
 
 		ZAP::Compression compression = ZAP::COMPRESS_NONE;

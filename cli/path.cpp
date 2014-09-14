@@ -22,7 +22,9 @@ THE SOFTWARE.*/
 #include "path.h"
 
 #include <sys/stat.h>
+#ifdef _WIN32
 #include <direct.h>
+#endif
 
 namespace cli
 {
@@ -38,7 +40,11 @@ namespace cli
 	bool isDirectory(const std::string &path)
 	{
 		struct stat sb;
+#ifdef _WIN32
 		return (stat(path.c_str(), &sb) == 0 && (sb.st_mode & _S_IFMT) == _S_IFDIR);
+#else
+		return (stat(path.c_str(), &sb) == 0 && (S_ISDIR(sb.st_mode)));
+#endif
 	}
 
 	bool createPath(const std::string &path)
@@ -49,8 +55,13 @@ namespace cli
 			std::string part = path.substr(0, index);
 			if (!isDirectory(part))
 			{
+#ifdef _WIN32
 				if (_mkdir(part.c_str()) != 0)
 					return false;
+#else
+				if (mkdir(part.c_str(), S_IRWXU | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH) != 0)
+					return false;
+#endif
 			}
 		}
 

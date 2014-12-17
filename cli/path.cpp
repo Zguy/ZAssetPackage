@@ -21,9 +21,10 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.*/
 #include "path.h"
 
-#include <sys/stat.h>
 #ifdef _WIN32
-#include <direct.h>
+#include <Windows.h>
+#else
+#include <sys/stat.h>
 #endif
 
 namespace cli
@@ -44,10 +45,11 @@ namespace cli
 
 	bool isDirectory(const std::string &path)
 	{
-		struct stat sb;
 #ifdef _WIN32
-		return (stat(path.c_str(), &sb) == 0 && (sb.st_mode & _S_IFMT) == _S_IFDIR);
+		DWORD attrib = GetFileAttributesA(path.c_str());
+		return (attrib != INVALID_FILE_ATTRIBUTES && (attrib & FILE_ATTRIBUTE_DIRECTORY) == FILE_ATTRIBUTE_DIRECTORY);
 #else
+		struct stat sb;
 		return (stat(path.c_str(), &sb) == 0 && (S_ISDIR(sb.st_mode)));
 #endif
 	}
@@ -61,7 +63,7 @@ namespace cli
 			if (!isDirectory(part))
 			{
 #ifdef _WIN32
-				if (_mkdir(part.c_str()) != 0)
+				if (CreateDirectoryA(part.c_str(), nullptr) == 0)
 					return false;
 #else
 				if (mkdir(part.c_str(), S_IRWXU | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH) != 0)

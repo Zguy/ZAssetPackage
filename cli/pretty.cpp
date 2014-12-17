@@ -56,7 +56,7 @@ namespace cli
 	}
 	std::string getPrettySize(std::uint32_t size)
 	{
-		static const char *suffixes[] = { " B", " KB", " MB", " GB", " TB" };
+		static const char *suffixes[] = { " B", " KiB", " MiB", " GiB", " TiB" };
 		static const int suffixesSize = 5;
 
 		int suffIndex = 0;

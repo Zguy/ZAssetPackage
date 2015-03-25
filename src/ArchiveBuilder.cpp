@@ -124,7 +124,7 @@ namespace ZAP
 		writeField(stream, &COMPRESSION); // Compression
 
 		// Build lookup table
-		std::uint32_t tableSize = files.size();
+		std::uint32_t tableSize = static_cast<std::uint32_t>(files.size());
 		writeField(stream, &tableSize); // Table size
 
 		std::uint32_t *fillIn = new std::uint32_t[tableSize];

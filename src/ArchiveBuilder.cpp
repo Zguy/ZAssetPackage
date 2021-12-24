@@ -28,10 +28,17 @@ THE SOFTWARE.*/
 
 namespace
 {
+	const std::uint16_t MAGIC_CHARS = 'AZ';
+
 	template<typename T>
-	inline void writeField(std::ostream &stream, T *field)
+	inline void writeField(std::ostream &stream, const T *field)
 	{
 		stream.write(reinterpret_cast<const char*>(field), sizeof(T));
+	}
+	template<typename T>
+	inline void writeField(std::ostream &stream, const T field)
+	{
+		stream.write(reinterpret_cast<const char*>(&field), sizeof(T));
 	}
 }
 
@@ -114,14 +121,10 @@ namespace ZAP
 			return false;
 		}
 
-		static const std::uint16_t MAGIC  = 'AZ';
-		static const std::uint8_t VERSION = static_cast<std::uint8_t>(VERSION_CUR);
-		const std::uint8_t COMPRESSION = static_cast<std::uint8_t>(compression);
-
 		// Header
-		writeField(stream, &MAGIC); // Magic
-		writeField(stream, &VERSION); // Version
-		writeField(stream, &COMPRESSION); // Compression
+		writeField(stream, MAGIC_CHARS); // Magic
+		writeField(stream, static_cast<std::uint8_t>(Version::CURRENT)); // Version
+		writeField(stream, static_cast<std::uint8_t>(compression)); // Compression
 
 		// Build lookup table
 		std::uint32_t tableSize = static_cast<std::uint32_t>(files.size());
@@ -135,10 +138,9 @@ namespace ZAP
 
 			// We don't know these values yet
 			(*currFillIn) = static_cast<std::uint32_t>(stream.tellp());
-			static const std::uint32_t ZERO = 0;
-			writeField(stream, &ZERO); // File index
-			writeField(stream, &ZERO); // Original file size
-			writeField(stream, &ZERO); // Archive file size
+			writeField(stream, 0); // File index
+			writeField(stream, 0); // Original file size
+			writeField(stream, 0); // Archive file size
 
 			++currFillIn;
 		}

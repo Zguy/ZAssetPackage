@@ -29,6 +29,8 @@ namespace
 	const std::istream::pos_type MAGIC_POS = 0;
 	const std::istream::pos_type TABLE_POS = 4;
 
+	const std::uint16_t MAGIC_CHARS = 'AZ';
+
 	template<typename T>
 	inline void readField(std::istream *stream, T *field)
 	{
@@ -100,11 +102,11 @@ namespace ZAP
 		return (lookupTable.find(virtual_path) != lookupTable.cend());
 	}
 
-	bool Archive::getData(const std::string &virtual_path, char *&data, size_t &size) const
+	bool Archive::getData(const std::string &virtual_path, char *&data, std::size_t &size) const
 	{
 		return getData(getEntry(virtual_path), data, size);
 	}
-	bool Archive::getData(const Entry *entry, char *&return_data, size_t &return_size) const
+	bool Archive::getData(const Entry *entry, char *&return_data, std::size_t &return_size) const
 	{
 		if (entry == nullptr || !isSupportedCompression())
 			return false;
@@ -128,11 +130,11 @@ namespace ZAP
 		return true;
 	}
 
-	bool Archive::getRawData(const std::string &virtual_path, char *&data, size_t &size) const
+	bool Archive::getRawData(const std::string &virtual_path, char *&data, std::size_t &size) const
 	{
 		return getRawData(getEntry(virtual_path), data, size);
 	}
-	bool Archive::getRawData(const Entry *entry, char *&data, size_t &size) const
+	bool Archive::getRawData(const Entry *entry, char *&data, std::size_t &size) const
 	{
 		if (entry == nullptr)
 			return false;
@@ -196,7 +198,7 @@ namespace ZAP
 		readField(stream, &header.version);
 		readField(stream, &header.compression);
 
-		if (header.magic != 'AZ')
+		if (header.magic != MAGIC_CHARS)
 			return false;
 		if (header.version < VERSION_MIN || header.version > VERSION_MAX)
 			return false;
@@ -227,7 +229,7 @@ namespace ZAP
 				filename += c;
 			}
 
-			Entry entry;
+			Entry entry {};
 			entry.virtual_path = filename;
 			readField(stream, &entry.index);
 			readField(stream, &entry.decompressed_size);

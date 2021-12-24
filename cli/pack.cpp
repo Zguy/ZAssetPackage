@@ -30,9 +30,9 @@ THE SOFTWARE.*/
 #include <cstring>
 
 #ifdef _WIN32
-#include <Windows.h>
+	#include <Windows.h>
 #else
-#include <dirent.h>
+	#include <dirent.h>
 #endif
 
 namespace cli
@@ -45,7 +45,7 @@ namespace cli
 		}
 		void addDirectory(ZAP::ArchiveBuilder &archive, const std::string &path, bool recursive)
 		{
-#ifdef _WIN32
+		#ifdef _WIN32
 			HANDLE dir;
 			WIN32_FIND_DATAA ent;
 
@@ -69,7 +69,7 @@ namespace cli
 
 				FindClose(dir);
 			}
-#else
+		#else
 			DIR *dir;
 			struct dirent *ent;
 
@@ -93,7 +93,7 @@ namespace cli
 
 				closedir(dir);
 			}
-#endif
+		#endif
 		}
 	}
 

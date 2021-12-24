@@ -23,8 +23,8 @@ THE SOFTWARE.*/
 #include "Config.h"
 
 #ifdef ZAP_COMPRESS_LZ4
-#	include <lz4/lz4.h>
-#	include <lz4/lz4hc.h>
+	#include <lz4/lz4.h>
+	#include <lz4/lz4hc.h>
 #endif
 
 namespace ZAP
@@ -34,9 +34,9 @@ namespace ZAP
 		switch (compression)
 		{
 		case COMPRESS_NONE: return true;
-#ifdef ZAP_COMPRESS_LZ4
+		#ifdef ZAP_COMPRESS_LZ4
 		case COMPRESS_LZ4: return true;
-#endif
+		#endif
 		default: return false;
 		}
 	}
@@ -50,13 +50,13 @@ namespace ZAP
 
 		switch (compression)
 		{
-		case COMPRESS_NONE:
+			case COMPRESS_NONE:
 			{
 				out_size = in_size;
 				return true;
 			}
-#ifdef ZAP_COMPRESS_LZ4
-		case COMPRESS_LZ4:
+			#ifdef ZAP_COMPRESS_LZ4
+			case COMPRESS_LZ4:
 			{
 				char *out_data = new char[LZ4_compressBound(in_size)];
 				out_size = LZ4_compressHC(data, out_data, in_size);
@@ -71,8 +71,8 @@ namespace ZAP
 					return false;
 				}
 			}
-#endif
-		default:
+			#endif
+			default:
 			{
 				return false;
 			}
@@ -85,12 +85,12 @@ namespace ZAP
 
 		switch (compression)
 		{
-		case COMPRESS_NONE:
+			case COMPRESS_NONE:
 			{
 				return true;
 			}
-#ifdef ZAP_COMPRESS_LZ4
-		case COMPRESS_LZ4:
+			#ifdef ZAP_COMPRESS_LZ4
+			case COMPRESS_LZ4:
 			{
 				char *out_data = new char[out_size];
 				if (LZ4_decompress_fast(data, out_data, out_size) > 0)
@@ -104,8 +104,8 @@ namespace ZAP
 					return false;
 				}
 			}
-#endif
-		default:
+			#endif
+			default:
 			{
 				return false;
 			}

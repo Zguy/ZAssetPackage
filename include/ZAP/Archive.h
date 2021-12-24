@@ -98,8 +98,8 @@ namespace ZAP
 		///\param [out] data The data, untouched if failed.
 		///\param [out] size The data size, untouched if failed.
 		///\return false if the virtual_path does not exist, or uses an unsupported compression.
-		bool getData(const std::string &virtual_path, char *&data, size_t &size) const;
-		bool getData(const Entry *entry, char *&data, size_t &size) const;
+		bool getData(const std::string &virtual_path, char *&data, std::size_t &size) const;
+		bool getData(const Entry *entry, char *&data, std::size_t &size) const;
 
 		///\brief Extracts the raw data of a file.
 		///
@@ -109,8 +109,8 @@ namespace ZAP
 		///\param [out] data The data, untouched if failed.
 		///\param [out] size The data size, untouched if failed.
 		///\return false if the virtual_path does not exist.
-		bool getRawData(const std::string &virtual_path, char *&data, size_t &size) const;
-		bool getRawData(const Entry *entry, char *&data, size_t &size) const;
+		bool getRawData(const std::string &virtual_path, char *&data, std::size_t &size) const;
+		bool getRawData(const Entry *entry, char *&data, std::size_t &size) const;
 
 		///\brief Returns a pointer to the Entry of a file.
 		///\param virtual_path Full pathname of the virtual file.

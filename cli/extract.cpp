@@ -48,9 +48,9 @@ namespace cli
 		int field0 = 4+fieldMargin, field1 = 10+fieldMargin, field2 = 12+fieldMargin;
 		for (const ZAP::Archive::Entry *entry : filelist)
 		{
-			int newField0 = entry->virtual_path.size()+fieldMargin;
-			int newField1 = getPrettySize(entry->compressed_size).size()+fieldMargin;
-			int newField2 = getPrettySize(entry->decompressed_size).size()+fieldMargin;
+			int newField0 = static_cast<int>(entry->virtual_path.size())+fieldMargin;
+			int newField1 = static_cast<int>(getPrettySize(entry->compressed_size).size())+fieldMargin;
+			int newField2 = static_cast<int>(getPrettySize(entry->decompressed_size).size())+fieldMargin;
 			if (newField0 > field0)
 				field0 = newField0;
 			if (newField1 > field1)

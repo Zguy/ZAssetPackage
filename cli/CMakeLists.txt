@@ -1,4 +1,4 @@
-set (SRC_CLI
+set(SRC_CLI
 	"main.cpp"
 	"extract.h"
 	"extract.cpp"
@@ -11,12 +11,12 @@ set (SRC_CLI
 	"pretty.h"
 	"pretty.cpp"
 )
-source_group ("cli" FILES ${SRC_CLI})
+source_group("cli" FILES ${SRC_CLI})
 
-add_executable (zapcli ${SRC_CLI})
+add_executable(zapcli ${SRC_CLI})
 
-target_link_libraries (zapcli ZAP)
+target_link_libraries(zapcli ZAP)
 
 if (CMAKE_COMPILER_IS_GNUCXX)
-	set_source_files_properties (${SRC_CLI} PROPERTIES COMPILE_FLAGS "-std=c++11")
-endif ()
+	set_source_files_properties(${SRC_CLI} PROPERTIES COMPILE_FLAGS "-std=c++11")
+endif()

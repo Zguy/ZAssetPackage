@@ -58,8 +58,9 @@ namespace ZAP
 			#ifdef ZAP_COMPRESS_LZ4
 			case Compression::LZ4:
 			{
-				char *out_data = new char[LZ4_compressBound(in_size)];
-				out_size = LZ4_compressHC(data, out_data, in_size);
+				int out_capacity = LZ4_compressBound(in_size);
+				char *out_data = new char[out_capacity];
+				out_size = LZ4_compress_HC(data, out_data, in_size, out_capacity, LZ4HC_CLEVEL_DEFAULT);
 				if (out_size > 0)
 				{
 					delete[] data;
@@ -82,8 +83,6 @@ namespace ZAP
 
 	bool decompress(Compression compression, char *&data, std::uint32_t in_size, std::uint32_t out_size)
 	{
-		(void)in_size; // Unreferenced parameter
-
 		switch (compression)
 		{
 			case Compression::NONE:
@@ -94,7 +93,7 @@ namespace ZAP
 			case Compression::LZ4:
 			{
 				char *out_data = new char[out_size];
-				if (LZ4_decompress_fast(data, out_data, out_size) > 0)
+				if (LZ4_decompress_safe(data, out_data, in_size, out_size) > 0)
 				{
 					delete[] data;
 					data = out_data;

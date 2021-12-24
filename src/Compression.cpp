@@ -68,6 +68,7 @@ namespace ZAP
 				}
 				else
 				{
+					delete[] out_data;
 					return false;
 				}
 			}
@@ -101,6 +102,7 @@ namespace ZAP
 				}
 				else
 				{
+					delete[] out_data;
 					return false;
 				}
 			}

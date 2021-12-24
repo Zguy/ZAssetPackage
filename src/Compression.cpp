@@ -33,9 +33,9 @@ namespace ZAP
 	{
 		switch (compression)
 		{
-		case COMPRESS_NONE: return true;
+		case Compression::NONE: return true;
 		#ifdef ZAP_COMPRESS_LZ4
-		case COMPRESS_LZ4: return true;
+		case Compression::LZ4: return true;
 		#endif
 		default: return false;
 		}
@@ -50,13 +50,13 @@ namespace ZAP
 
 		switch (compression)
 		{
-			case COMPRESS_NONE:
+			case Compression::NONE:
 			{
 				out_size = in_size;
 				return true;
 			}
 			#ifdef ZAP_COMPRESS_LZ4
-			case COMPRESS_LZ4:
+			case Compression::LZ4:
 			{
 				char *out_data = new char[LZ4_compressBound(in_size)];
 				out_size = LZ4_compressHC(data, out_data, in_size);
@@ -85,12 +85,12 @@ namespace ZAP
 
 		switch (compression)
 		{
-			case COMPRESS_NONE:
+			case Compression::NONE:
 			{
 				return true;
 			}
 			#ifdef ZAP_COMPRESS_LZ4
-			case COMPRESS_LZ4:
+			case Compression::LZ4:
 			{
 				char *out_data = new char[out_size];
 				if (LZ4_decompress_fast(data, out_data, out_size) > 0)

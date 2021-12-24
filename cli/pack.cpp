@@ -118,7 +118,7 @@ namespace cli
 				addPath(archive, path);
 		}
 
-		ZAP::Compression compression = ZAP::COMPRESS_NONE;
+		ZAP::Compression compression = ZAP::Compression::NONE;
 		if (options[COMPRESS].arg != nullptr)
 			compression = static_cast<ZAP::Compression>(std::atoi(options[COMPRESS].arg));
 

@@ -28,10 +28,10 @@ THE SOFTWARE.*/
 namespace ZAP
 {
 	///\brief The supported compression methods.
-	enum Compression
+	enum class Compression
 	{
-		COMPRESS_NONE = 0, ///< No compression.
-		COMPRESS_LZ4  = 1, ///< LZ4 compression.
+		NONE = 0, ///< No compression.
+		LZ4  = 1, ///< LZ4 compression.
 	};
 
 	///\brief Returns whether this build of the library supports a given compression method.

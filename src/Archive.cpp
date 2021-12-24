@@ -200,7 +200,7 @@ namespace ZAP
 
 		if (header.magic != MAGIC_CHARS)
 			return false;
-		if (header.version < VERSION_MIN || header.version > VERSION_MAX)
+		if (header.version < static_cast<std::uint8_t>(Version::MIN) || header.version > static_cast<std::uint8_t>(Version::MAX))
 			return false;
 
 		return true;

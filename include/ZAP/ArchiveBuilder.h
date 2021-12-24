@@ -70,7 +70,7 @@ namespace ZAP
 		///\param filename Filename to save the archive to.
 		///\param compression (optional) The compression method to use, defaults to none.
 		///\return true if it succeeds, false if it fails.
-		bool buildFile(const std::string &filename, Compression compression = COMPRESS_NONE);
+		bool buildFile(const std::string &filename, Compression compression = Compression::NONE);
 
 		///\brief Builds the archive to memory.
 		///\note If a file cannot be found, a zero-length file will be stored.
@@ -78,7 +78,7 @@ namespace ZAP
 		///\param [out] size The resulting size, untouched if failed.
 		///\param compression (optional) The compression method to use, defaults to none.
 		///\return true if it succeeds, false if it fails.
-		bool buildMemory(char *&data, std::size_t &size, Compression compression = COMPRESS_NONE);
+		bool buildMemory(char *&data, std::size_t &size, Compression compression = Compression::NONE);
 
 	private:
 		bool build(std::ostream &stream, Compression compression);

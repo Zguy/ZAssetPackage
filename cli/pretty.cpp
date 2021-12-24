@@ -41,7 +41,7 @@ namespace cli
 	{
 		switch (version)
 		{
-		case ZAP::VERSION_1_0: return "1.0";
+		case ZAP::Version::V1_0: return "1.0";
 		default: return "Unknown";
 		}
 	}
@@ -49,8 +49,8 @@ namespace cli
 	{
 		switch (compression)
 		{
-		case ZAP::COMPRESS_NONE: return "None";
-		case ZAP::COMPRESS_LZ4:  return "LZ4";
+		case ZAP::Compression::NONE: return "None";
+		case ZAP::Compression::LZ4:  return "LZ4";
 		default: return "Unknown";
 		}
 	}

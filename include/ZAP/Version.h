@@ -25,12 +25,12 @@ THE SOFTWARE.*/
 namespace ZAP
 {
 	///\brief Versions of the archive format.
-	enum Version
+	enum class Version
 	{
-		VERSION_1_0 = 0, ///< Version 1.0.
-		VERSION_MIN = VERSION_1_0, ///< The minimum version supported.
-		VERSION_MAX = VERSION_1_0, ///< The maximum version supported.
-		VERSION_CUR = VERSION_MAX ///< The default version.
+		V1_0    = 0,    ///< Version 1.0.
+		MIN     = V1_0, ///< The minimum version supported.
+		MAX     = V1_0, ///< The maximum version supported.
+		CURRENT = MAX   ///< The default version.
 	};
 }
 
